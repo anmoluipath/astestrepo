@@ -1,0 +1,385 @@
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="DailyDepositTemplate" this:DailyDepositTemplate.in_TemplateFileName="DAILY DEPOSIT TEMPLATE - BANK.xlsb" this:DailyDepositTemplate.in_TemplateFilePath="[Environment.CurrentDirectory + &quot;\Data\&quot;]" this:DailyDepositTemplate.in_FilePath="[Environment.CurrentDirectory +&quot;\&quot;]"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+ xmlns:sd="clr-namespace:System.Data;assembly=System.Data"
+ xmlns:this="clr-namespace:"
+ xmlns:ui="http://schemas.uipath.com/workflow/activities"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="in_TemplateFileName" Type="InArgument(x:String)" />
+    <x:Property Name="in_TemplateFilePath" Type="InArgument(x:String)" />
+    <x:Property Name="in_FilePath" Type="InArgument(x:String)" />
+  </x:Members>
+  <mva:VisualBasic.Settings>
+    <x:Null />
+  </mva:VisualBasic.Settings>
+  <sap2010:WorkflowViewState.IdRef>ActivityBuilder_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Activities.Expressions</x:String>
+      <x:String>System.Activities.Validation</x:String>
+      <x:String>System.Activities.XamlIntegration</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>System</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.Drawing</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Net.Mail</x:String>
+      <x:String>System.Xml</x:String>
+      <x:String>System.Xml.Linq</x:String>
+      <x:String>System.Windows.Markup</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>System.Xml.Serialization</x:String>
+      <x:String>Microsoft.VisualBasic.CompilerServices</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>UiPath.Excel</AssemblyReference>
+      <AssemblyReference>UiPath.Mail</AssemblyReference>
+      <AssemblyReference>UiPath.PDF</AssemblyReference>
+      <AssemblyReference>System.ValueTuple</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+      <AssemblyReference>System.Collections.Immutable</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualStudio.Services.Common</AssemblyReference>
+      <AssemblyReference>System.Runtime.WindowsRuntime</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence sap2010:Annotation.AnnotationText="This workflow extracts data from daily deposit csv and append it to daily deposit template" DisplayName="DailyDepositTemplate" sap2010:WorkflowViewState.IdRef="Sequence_1">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="sd:DataTable" Name="dt_DailyDeposit" />
+      <Variable x:TypeArguments="x:Int32" Name="LastReportRow" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dt_Template" />
+      <Variable x:TypeArguments="x:Int32" Default="0" Name="CurrentTemplateRow" />
+    </Sequence.Variables>
+    <ui:Comment sap2010:WorkflowViewState.IdRef="Comment_1" Text="// To read daily deposit CSV" />
+    <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Info" Message="[&quot;reading daily deposit CSV&quot;]" />
+    <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_8" Level="Info" Message="[&quot;processing file &quot;+in_FilePath]" />
+    <ui:ExcelApplicationScope Password="{x:Null}" AutoSave="False" CreateNewFile="False" DisplayName="Excel Application Scope" sap2010:WorkflowViewState.IdRef="ExcelApplicationScope_2" ReadOnly="True" Visible="False" WorkbookPath="[in_FilePath]">
+      <ui:ExcelApplicationScope.Body>
+        <ActivityAction x:TypeArguments="ui:WorkbookApplication">
+          <ActivityAction.Argument>
+            <DelegateInArgument x:TypeArguments="ui:WorkbookApplication" Name="ExcelWorkbookScope" />
+          </ActivityAction.Argument>
+          <Sequence DisplayName="Do" sap2010:WorkflowViewState.IdRef="Sequence_3">
+            <ui:Comment sap2010:WorkflowViewState.IdRef="Comment_2" Text="// Read all csv data from 4th row (to skip non relevant data)" />
+            <ui:ExcelReadRange AddHeaders="False" DataTable="[dt_DailyDeposit]" DisplayName="Read Range" sap2010:WorkflowViewState.IdRef="ExcelReadRange_2" Range="A4" SheetName="[in_FilePath.Split(Convert.ToChar(&quot;\&quot;)).Last.Split(Convert.ToChar(&quot;.&quot;)).First]" />
+          </Sequence>
+        </ActivityAction>
+      </ui:ExcelApplicationScope.Body>
+    </ui:ExcelApplicationScope>
+    <ui:Comment sap2010:WorkflowViewState.IdRef="Comment_3" Text="// To filter non relevant data from the end of file" />
+    <ui:Comment sap2010:WorkflowViewState.IdRef="Comment_4" Text="// to get index of last  relevant row in datatable we lookup for first (since the end of file) row which contain &quot;Check&quot; in first cell" />
+    <Assign sap2010:WorkflowViewState.IdRef="Assign_5">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:Int32">[LastReportRow]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:Int32">[dt_DailyDeposit.Rows.Count-1]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_2" Level="Trace" Message="[&quot;Look for last relevant row&quot;]" />
+    <While DisplayName="While row is not relevant" sap2010:WorkflowViewState.IdRef="While_1">
+      <While.Variables>
+        <Variable x:TypeArguments="sd:DataRow" Name="TempRow" />
+        <Variable x:TypeArguments="x:Boolean" Name="IsRelevant" />
+      </While.Variables>
+      <While.Condition>[IsRelevant = False]</While.Condition>
+      <Sequence sap2010:WorkflowViewState.IdRef="Sequence_5">
+        <Sequence sap2010:WorkflowViewState.IdRef="Sequence_4">
+          <Assign sap2010:WorkflowViewState.IdRef="Assign_2">
+            <Assign.To>
+              <OutArgument x:TypeArguments="sd:DataRow">[TempRow]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="sd:DataRow">[dt_DailyDeposit.Rows(LastReportRow)]</InArgument>
+            </Assign.Value>
+          </Assign>
+          <If Condition="[dt_DailyDeposit.Rows(LastReportRow)(0).ToString = &quot;Check&quot;]" DisplayName="If first cell of last row of table equals &quot;Check&quot;" sap2010:WorkflowViewState.IdRef="If_1">
+            <If.Then>
+              <Assign DisplayName="Assign relevant is true" sap2010:WorkflowViewState.IdRef="Assign_3">
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:Boolean">[IsRelevant]</OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:Boolean">True</InArgument>
+                </Assign.Value>
+              </Assign>
+            </If.Then>
+            <If.Else>
+              <Sequence DisplayName="Delete row and decrease LastRow variable" sap2010:WorkflowViewState.IdRef="Sequence_6">
+                <ui:RemoveDataRow Row="{x:Null}" DataTable="[dt_DailyDeposit]" DisplayName="Remove Data Row" sap2010:WorkflowViewState.IdRef="RemoveDataRow_2" RowIndex="[LastReportRow]" />
+                <Assign sap2010:WorkflowViewState.IdRef="Assign_4">
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="x:Int32">[LastReportRow]</OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="x:Int32">[LastReportRow-1]</InArgument>
+                  </Assign.Value>
+                </Assign>
+              </Sequence>
+            </If.Else>
+          </If>
+        </Sequence>
+      </Sequence>
+    </While>
+    <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_3" Level="Trace" Message="[&quot;last relevant report row is &quot; + LastReportRow.ToString]" />
+    <ui:ExcelApplicationScope Password="{x:Null}" AutoSave="False" CreateNewFile="False" DisplayName="Template Excel Application Scope" sap2010:WorkflowViewState.IdRef="ExcelApplicationScope_3" Visible="False" WorkbookPath="[in_TemplateFilePath+ in_TemplateFileName]">
+      <ui:ExcelApplicationScope.Body>
+        <ActivityAction x:TypeArguments="ui:WorkbookApplication">
+          <ActivityAction.Argument>
+            <DelegateInArgument x:TypeArguments="ui:WorkbookApplication" Name="ExcelWorkbookScope" />
+          </ActivityAction.Argument>
+          <Sequence DisplayName="Do" sap2010:WorkflowViewState.IdRef="Sequence_7">
+            <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_4" Level="Trace" Message="[&quot;Look for first empty row in template&quot;]" />
+            <ui:Comment sap2010:WorkflowViewState.IdRef="Comment_5" Text="// To find first empty row of template" />
+            <ui:ExcelReadRange AddHeaders="False" DataTable="[dt_Template]" DisplayName="Read Range" sap2010:WorkflowViewState.IdRef="ExcelReadRange_3" SheetName="DEPOSITS">
+              <ui:ExcelReadRange.Range>
+                <InArgument x:TypeArguments="x:String">
+                  <Literal x:TypeArguments="x:String" Value="" />
+                </InArgument>
+              </ui:ExcelReadRange.Range>
+            </ui:ExcelReadRange>
+            <ui:Comment sap2010:WorkflowViewState.IdRef="Comment_6" Text="// Look for first enmty cell in 'B' column" />
+            <ui:ForEachRow CurrentIndex="{x:Null}" DataTable="[dt_Template]" DisplayName="For Each Row" sap2010:WorkflowViewState.IdRef="ForEachRow_1">
+              <ui:ForEachRow.Body>
+                <ActivityAction x:TypeArguments="sd:DataRow">
+                  <ActivityAction.Argument>
+                    <DelegateInArgument x:TypeArguments="sd:DataRow" Name="row" />
+                  </ActivityAction.Argument>
+                  <If Condition="[row(1).ToString = String.Empty]" DisplayName="If cell in b column is empty" sap2010:WorkflowViewState.IdRef="If_2">
+                    <If.Then>
+                      <Sequence DisplayName="Brake cycle and increase Current row by 1" sap2010:WorkflowViewState.IdRef="Sequence_16">
+                        <Assign sap2010:WorkflowViewState.IdRef="Assign_7">
+                          <Assign.To>
+                            <OutArgument x:TypeArguments="x:Int32">[CurrentTemplateRow]</OutArgument>
+                          </Assign.To>
+                          <Assign.Value>
+                            <InArgument x:TypeArguments="x:Int32">[CurrentTemplateRow+1]</InArgument>
+                          </Assign.Value>
+                        </Assign>
+                        <ui:Break sap2010:WorkflowViewState.IdRef="Break_1" />
+                      </Sequence>
+                    </If.Then>
+                    <If.Else>
+                      <Sequence DisplayName="Increase current row" sap2010:WorkflowViewState.IdRef="Sequence_11">
+                        <Assign sap2010:WorkflowViewState.IdRef="Assign_6">
+                          <Assign.To>
+                            <OutArgument x:TypeArguments="x:Int32">[CurrentTemplateRow]</OutArgument>
+                          </Assign.To>
+                          <Assign.Value>
+                            <InArgument x:TypeArguments="x:Int32">[CurrentTemplateRow+1]</InArgument>
+                          </Assign.Value>
+                        </Assign>
+                      </Sequence>
+                    </If.Else>
+                  </If>
+                </ActivityAction>
+              </ui:ForEachRow.Body>
+            </ui:ForEachRow>
+            <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_5" Level="Trace" Message="[&quot;First empty row in template is &quot;+ CurrentTemplateRow.ToString]" />
+            <ui:Comment sap2010:WorkflowViewState.IdRef="Comment_7" Text="// To write parsed data into template" />
+            <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_6" Level="Info" Message="[&quot;Starting write data to template&quot;]" />
+            <ui:ForEachRow CurrentIndex="{x:Null}" DataTable="[dt_DailyDeposit]" DisplayName="For Each Row in DailyDeposit datatable" sap2010:WorkflowViewState.IdRef="ForEachRow_2">
+              <ui:ForEachRow.Body>
+                <ActivityAction x:TypeArguments="sd:DataRow">
+                  <ActivityAction.Argument>
+                    <DelegateInArgument x:TypeArguments="sd:DataRow" Name="row" />
+                  </ActivityAction.Argument>
+                  <Sequence sap2010:WorkflowViewState.IdRef="Sequence_15">
+                    <Sequence DisplayName="Do" sap2010:WorkflowViewState.IdRef="Sequence_13">
+                      <ui:Comment sap2010:WorkflowViewState.IdRef="Comment_8" Text="// Write LOCKBOX" />
+                      <ui:ExcelWriteCell Cell="[&quot;B&quot;+CurrentTemplateRow.ToString]" DisplayName="Write Cell" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_1" SheetName="DEPOSITS" Text="[row(1).ToString]" />
+                      <ui:Comment sap2010:WorkflowViewState.IdRef="Comment_9" Text="// Write DATE OF DEPOSIT" />
+                      <ui:ExcelWriteCell Cell="[&quot;C&quot;+CurrentTemplateRow.ToString]" DisplayName="Write Cell" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_2" SheetName="DEPOSITS" Text="[row(2).ToString]" />
+                      <ui:Comment sap2010:WorkflowViewState.IdRef="Comment_10" Text="// Write REMITTER NAME" />
+                      <ui:ExcelWriteCell Cell="[&quot;D&quot;+CurrentTemplateRow.ToString]" DisplayName="Write Cell" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_3" SheetName="DEPOSITS" Text="[row(9).ToString]" />
+                      <ui:Comment sap2010:WorkflowViewState.IdRef="Comment_11" Text="// Write check number" />
+                      <ui:ExcelWriteCell Cell="[&quot;E&quot;+CurrentTemplateRow.ToString]" DisplayName="Write Cell" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_4" SheetName="DEPOSITS" Text="[&quot;CK&quot;+row(7).ToString]" />
+                      <ui:Comment sap2010:WorkflowViewState.IdRef="Comment_12" Text="// Write CHECK AMOUNT" />
+                      <ui:ExcelWriteCell Cell="[&quot;F&quot;+CurrentTemplateRow.ToString]" DisplayName="Write Cell" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_5" SheetName="DEPOSITS" Text="[row(8).ToString]" />
+                      <ui:Comment sap2010:WorkflowViewState.IdRef="Comment_15" Text="// Write AX formula" />
+                      <ui:ExcelWriteCell Cell="[&quot;A&quot;+CurrentTemplateRow.ToString]" DisplayName="Write Cell" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_6" SheetName="DEPOSITS" Text="[&quot;=VLOOKUP(B&quot;+CurrentTemplateRow.ToString+&quot;,KEY!A:B,2,0)&quot;]" />
+                      <ui:Comment sap2010:WorkflowViewState.IdRef="Comment_16" Text="// Write associate formula" />
+                      <ui:ExcelWriteCell Cell="[&quot;G&quot;+CurrentTemplateRow.ToString]" DisplayName="Write Cell" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_7" SheetName="DEPOSITS" Text="[&quot;=VLOOKUP(B&quot;+CurrentTemplateRow.ToString+&quot;,KEY!A:C,3,0)&quot;]" />
+                      <ui:Comment sap2010:WorkflowViewState.IdRef="Comment_13" Text="// Increase Current template row" />
+                      <Assign sap2010:WorkflowViewState.IdRef="Assign_8">
+                        <Assign.To>
+                          <OutArgument x:TypeArguments="x:Int32">[CurrentTemplateRow]</OutArgument>
+                        </Assign.To>
+                        <Assign.Value>
+                          <InArgument x:TypeArguments="x:Int32">[CurrentTemplateRow+1]</InArgument>
+                        </Assign.Value>
+                      </Assign>
+                    </Sequence>
+                  </Sequence>
+                </ActivityAction>
+              </ui:ForEachRow.Body>
+            </ui:ForEachRow>
+            <ui:Comment sap2010:WorkflowViewState.IdRef="Comment_14" Text="// Save filed template" />
+            <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_7" Level="Info" Message="[&quot;Saving workbook&quot;]" />
+            <ui:ExcelSaveWorkbook DisplayName="Save Workbook" sap2010:WorkflowViewState.IdRef="ExcelSaveWorkbook_1" />
+          </Sequence>
+        </ActivityAction>
+      </ui:ExcelApplicationScope.Body>
+    </ui:ExcelApplicationScope>
+    <sads:DebugSymbol.Symbol>d1JFOlxEb2N1bWVudHNcVWlQYXRoXEFkdmFudGFnZSBTb2x1dGlvbnNcQVNcV29ya2Zsb3dzXEJvQVxEYWlseURlcG9zaXRUZW1wbGF0ZS54YW1segHLAQH/AQEEAXgBmwEBAwGnAgHVAgECTwOCAg4CAQFUM1Q2AgECVgVWYwMBmAFXBVeeAQMBlgFYBVihAQMBkwFZBWUgAwGJAWYFZnoDAYgBZwVn1wEDAYcBaAVvDgMBgwFwBXCgAQMBgQFxBZwBDQIBZ50BBZ0BuwECAWSeAQWAAiACAQNXclebAQMBlwFYclieAQMBlAFZ5wFZ9gEDAZEBXwtiFgMBigFtL21NAwGGAWowaj8DAYQBcHNwnQEDAYIBdwebARICAWp2GHYsAgFonQFznQG4AQIBZZ4B4AGeAYwCAgFhpAEL/QEWAgEEYA1gjAEDAZABYQ1hmQIDAYsBeAmaARQCAWulAQ2lAbIBAgFfpgENpgF1AgFepwENrQEhAgFZrgENrgF5AgFYrwEN0gEdAgFG0wEN0wHKAQIBQ9QBDdQBdAIBQtUBDdUBrAECAUDWAQ35AR0CAQn6AQ36AWYCAQj7AQ37AZwBAgEG/AEN/AF3AgEFYT1hUAMBjgFhowFhpwEDAY0BYbIBYZYCAwGMAXkLgAEUAgF9gQELmQEQAgFspQF7pQGvAQIBYKcBPacBTAIBXKoBE6oBQgIBW6cBowGnAa0BAgFarwE+rwFNAgFWtQETzwEYAgFH0wF70wHHAQIBRNUBetUBqQECAUHWAT7WAVECAT7cARP2AR4CAQr7AXr7AZkBAgEHfjh+XQMBgAF7OXtCAgF+gQEZgQFgAgFtgwEPigEYAgF5jQEPlwEaAgFutQEhtQFDAgFItwEXwQEiAgFPxAEXzQEiAgFJ3QEV9QEgAgELiAE7iAE/AgF8hQE8hQFIAgF6jgERjgG9AQIBdI8BEZYBGgIBb7gBGb8BIgIBUcABGcABTwIBUMUBGcwBIgIBSt4BF94BaQIBPd8BF98B2QECATjgARfgAXECATfhARfhAdkBAgEy4gEX4gFwAgEx4wEX4wHZAQIBLOQBF+QBbwIBK+UBF+UB6AECASbmARfmAW8CASXnARfnAdkBAgEg6AEX6AFtAgEf6QEX6QGWAgIBGeoBF+oBdAIBGOsBF+sBlgICARLsARfsAXoCARHtARf0ASACAQyOAakBjgG6AQIBd44BPI4BTwIBdZQBO5QBTAIBcpEBPJEBSwIBcL0BQ70BWQIBVLoBRLoBWAIBUsoBQ8oBWQIBTccBRMcBWAIBS98BL98BXAIBO98BwwHfAdYBAgE63wGzAd8BvQECATnhAS/hAVwCATXhAcMB4QHWAQIBNOEBswHhAb0BAgEz4wEv4wFcAgEv4wHDAeMB1gECAS7jAbMB4wG9AQIBLeUBL+UBXAIBKeUBwwHlAeUBAgEo5QGzAeUBvQECASfnAS/nAVwCASPnAcMB5wHWAQIBIucBswHnAb0BAgEh6QEv6QFcAgEd6QHDAekBkwICARvpAbMB6QG9AQIBGusBL+sBXAIBFusBwwHrAZMCAgEU6wGzAesBvQECARPyAUHyAVcCAQ/vAULvAVYCAQ0=</sads:DebugSymbol.Symbol>
+  </Sequence>
+  <sap2010:WorkflowViewState.ViewStateManager>
+    <sap2010:ViewStateManager>
+      <sap2010:ViewStateData Id="Comment_1" sap:VirtualizedContainerService.HintSize="619,55" />
+      <sap2010:ViewStateData Id="LogMessage_1" sap:VirtualizedContainerService.HintSize="619,91" />
+      <sap2010:ViewStateData Id="LogMessage_8" sap:VirtualizedContainerService.HintSize="619,91" />
+      <sap2010:ViewStateData Id="Comment_2" sap:VirtualizedContainerService.HintSize="314,74" />
+      <sap2010:ViewStateData Id="ExcelReadRange_2" sap:VirtualizedContainerService.HintSize="314,59" />
+      <sap2010:ViewStateData Id="Sequence_3" sap:VirtualizedContainerService.HintSize="336,297">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ExcelApplicationScope_2" sap:VirtualizedContainerService.HintSize="619,406" />
+      <sap2010:ViewStateData Id="Comment_3" sap:VirtualizedContainerService.HintSize="619,74" />
+      <sap2010:ViewStateData Id="Comment_4" sap:VirtualizedContainerService.HintSize="619,93" />
+      <sap2010:ViewStateData Id="Assign_5" sap:VirtualizedContainerService.HintSize="619,60" />
+      <sap2010:ViewStateData Id="LogMessage_2" sap:VirtualizedContainerService.HintSize="619,91" />
+      <sap2010:ViewStateData Id="Assign_2" sap:VirtualizedContainerService.HintSize="531,60" />
+      <sap2010:ViewStateData Id="Assign_3" sap:VirtualizedContainerService.HintSize="242,60" />
+      <sap2010:ViewStateData Id="RemoveDataRow_2" sap:VirtualizedContainerService.HintSize="242,22" />
+      <sap2010:ViewStateData Id="Assign_4" sap:VirtualizedContainerService.HintSize="242,60" />
+      <sap2010:ViewStateData Id="Sequence_6" sap:VirtualizedContainerService.HintSize="264,246">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="If_1" sap:VirtualizedContainerService.HintSize="531,394" />
+      <sap2010:ViewStateData Id="Sequence_4" sap:VirtualizedContainerService.HintSize="553,618">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_5" sap:VirtualizedContainerService.HintSize="575,742">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="While_1" sap:VirtualizedContainerService.HintSize="619,900" />
+      <sap2010:ViewStateData Id="LogMessage_3" sap:VirtualizedContainerService.HintSize="619,91" />
+      <sap2010:ViewStateData Id="LogMessage_4" sap:VirtualizedContainerService.HintSize="583,91" />
+      <sap2010:ViewStateData Id="Comment_5" sap:VirtualizedContainerService.HintSize="583,55" />
+      <sap2010:ViewStateData Id="ExcelReadRange_3" sap:VirtualizedContainerService.HintSize="583,59" />
+      <sap2010:ViewStateData Id="Comment_6" sap:VirtualizedContainerService.HintSize="583,55" />
+      <sap2010:ViewStateData Id="Assign_7" sap:VirtualizedContainerService.HintSize="242,60" />
+      <sap2010:ViewStateData Id="Break_1" sap:VirtualizedContainerService.HintSize="242,22" />
+      <sap2010:ViewStateData Id="Sequence_16" sap:VirtualizedContainerService.HintSize="264,246">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_6" sap:VirtualizedContainerService.HintSize="242,60" />
+      <sap2010:ViewStateData Id="Sequence_11" sap:VirtualizedContainerService.HintSize="264,184">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="If_2" sap:VirtualizedContainerService.HintSize="553,393" />
+      <sap2010:ViewStateData Id="ForEachRow_1" sap:VirtualizedContainerService.HintSize="583,540" />
+      <sap2010:ViewStateData Id="LogMessage_5" sap:VirtualizedContainerService.HintSize="583,91" />
+      <sap2010:ViewStateData Id="Comment_7" sap:VirtualizedContainerService.HintSize="583,55" />
+      <sap2010:ViewStateData Id="LogMessage_6" sap:VirtualizedContainerService.HintSize="583,91" />
+      <sap2010:ViewStateData Id="Comment_8" sap:VirtualizedContainerService.HintSize="314,55" />
+      <sap2010:ViewStateData Id="ExcelWriteCell_1" sap:VirtualizedContainerService.HintSize="314,87" />
+      <sap2010:ViewStateData Id="Comment_9" sap:VirtualizedContainerService.HintSize="314,55" />
+      <sap2010:ViewStateData Id="ExcelWriteCell_2" sap:VirtualizedContainerService.HintSize="314,87" />
+      <sap2010:ViewStateData Id="Comment_10" sap:VirtualizedContainerService.HintSize="314,55" />
+      <sap2010:ViewStateData Id="ExcelWriteCell_3" sap:VirtualizedContainerService.HintSize="314,87" />
+      <sap2010:ViewStateData Id="Comment_11" sap:VirtualizedContainerService.HintSize="314,55" />
+      <sap2010:ViewStateData Id="ExcelWriteCell_4" sap:VirtualizedContainerService.HintSize="314,87" />
+      <sap2010:ViewStateData Id="Comment_12" sap:VirtualizedContainerService.HintSize="314,55" />
+      <sap2010:ViewStateData Id="ExcelWriteCell_5" sap:VirtualizedContainerService.HintSize="314,87" />
+      <sap2010:ViewStateData Id="Comment_15" sap:VirtualizedContainerService.HintSize="314,55" />
+      <sap2010:ViewStateData Id="ExcelWriteCell_6" sap:VirtualizedContainerService.HintSize="314,87" />
+      <sap2010:ViewStateData Id="Comment_16" sap:VirtualizedContainerService.HintSize="314,55" />
+      <sap2010:ViewStateData Id="ExcelWriteCell_7" sap:VirtualizedContainerService.HintSize="314,87" />
+      <sap2010:ViewStateData Id="Comment_13" sap:VirtualizedContainerService.HintSize="314,55" />
+      <sap2010:ViewStateData Id="Assign_8" sap:VirtualizedContainerService.HintSize="314,60" />
+      <sap2010:ViewStateData Id="Sequence_13" sap:VirtualizedContainerService.HintSize="336,1833">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_15" sap:VirtualizedContainerService.HintSize="358,1957">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ForEachRow_2" sap:VirtualizedContainerService.HintSize="583,2104" />
+      <sap2010:ViewStateData Id="Comment_14" sap:VirtualizedContainerService.HintSize="583,55" />
+      <sap2010:ViewStateData Id="LogMessage_7" sap:VirtualizedContainerService.HintSize="583,91" />
+      <sap2010:ViewStateData Id="ExcelSaveWorkbook_1" sap:VirtualizedContainerService.HintSize="583,22" />
+      <sap2010:ViewStateData Id="Sequence_7" sap:VirtualizedContainerService.HintSize="605,3873">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ExcelApplicationScope_3" sap:VirtualizedContainerService.HintSize="619,3982" />
+      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="641,6458">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ActivityBuilder_1" sap:VirtualizedContainerService.HintSize="681,6538" />
+    </sap2010:ViewStateManager>
+  </sap2010:WorkflowViewState.ViewStateManager>
+</Activity>

@@ -1,0 +1,34 @@
+{
+  "name": "AdvantageSolutions",
+  "description": "Robotic Enterprise Framework based process",
+  "main": "Main.xaml",
+  "dependencies": {
+    "UiPath.Mail.Activities": "[1.3.0]",
+    "UiPath.Credentials.Activities": "[1.1.6479.13204]",
+    "UiPath.UIAutomation.Activities": "[19.3.0]",
+    "UiPath.System.Activities": "[19.3.0]",
+    "UiPath.Excel.Activities": "[2.5.2]",
+    "UiPath.PDF.Activities": "[1.3.1]",
+    "Microsoft.Office.Interop.Excel": "[15.0.4795.1000]"
+  },
+  "schemaVersion": "3.2",
+  "studioVersion": "18.4.5.0",
+  "projectVersion": "2019.5.7095.30488",
+  "runtimeOptions": {
+    "exceptionHandlerWorkflow": "GlobalHandler.xaml",
+    "autoDispose": false,
+    "excludedLoggedData": [
+      "Private:*",
+      "*password*"
+    ]
+  },
+  "projectType": "Workflow",
+  "libraryOptions": {
+    "includeOriginalXaml": false,
+    "privateWorkflows": []
+  },
+  "arguments": {
+    "input": [],
+    "output": []
+  }
+}
